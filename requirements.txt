@@ -1,0 +1,2 @@
+# Required for .xlsx parsing
+openpyxl>=3.1.0

@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+.DS_Store
+out/
+*.log
+
+# Cached Chart.js — committed for offline-first; uncomment to exclude:
+# assets/chart.umd.min.js

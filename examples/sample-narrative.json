@@ -1,0 +1,78 @@
+{
+  "executive_summary": "Bayt Al Khaleej shows a healthy NPS of 33 across 36 reviews and three branches, ahead of the GCC F&B median (~25–35). The Dubai - JBR location is the brand's strongest performer; Abu Dhabi - Marina is steady; Mall of Emirates is the laggard, primarily due to wait times and dated decor. Delivery experience (Talabat / HungerStation) is the single biggest drag on overall sentiment.",
+  "strengths": [
+    {
+      "title": "Iftar buffet is a brand differentiator",
+      "detail": "Ramadan iftar mentions are 100% positive across all three branches — guests specifically praise variety and the Ramadan tent setup."
+    },
+    {
+      "title": "Family-friendly positioning works",
+      "detail": "Family section, kids menu, and prayer area get repeated unprompted praise — a clear competitive moat in JBR."
+    },
+    {
+      "title": "Bilingual service quality",
+      "detail": "Arabic-language reviews skew more positive than English reviews, suggesting Arabic-fluent staff is a real asset."
+    }
+  ],
+  "issues": [
+    {
+      "title": "Delivery experience drags overall NPS",
+      "detail": "Six negative reviews specifically cite Talabat or HungerStation for late, cold, or incomplete orders. This is a fix outside the kitchen — packaging and handoff process.",
+      "quote": "Talabat order arrived 1 hour late and missing the appetizer. Disappointed with delivery.",
+      "quote_lang": "en"
+    },
+    {
+      "title": "Friday peak wait times across all branches",
+      "detail": "Wait-time complaints cluster on Friday evenings. Staffing or seating capacity issue, not a kitchen issue.",
+      "quote": "Mixed feelings. The food was great but it took ages. Friday lunch was packed.",
+      "quote_lang": "en"
+    },
+    {
+      "title": "Mall of Emirates branch underperforms on ambiance",
+      "detail": "The MoE branch alone gets 'dated decor' and 'nothing special' comments. Sister branches don't. Refurbishment candidate.",
+      "quote": "Average. Nothing special but nothing terrible either. Decor is dated.",
+      "quote_lang": "en"
+    }
+  ],
+  "recommendations": [
+    {
+      "title": "Audit Talabat & HungerStation handoff process",
+      "detail": "6 of the 8 1–2★ reviews mention delivery issues. Add a 'last 5 ft' check: temperature, completeness, sealed bag, before driver pickup. Track delivery NPS as separate KPI for 60 days.",
+      "priority": "high"
+    },
+    {
+      "title": "Add Friday evening surge staffing across all branches",
+      "detail": "Wait-time complaints concentrate Thursday-Friday 7–10pm. Add 1 host + 1 floor staff for those slots and re-measure in 30 days.",
+      "priority": "high"
+    },
+    {
+      "title": "Plan Mall of Emirates refurbishment",
+      "detail": "MoE is the only branch with decor/ambiance complaints. Capital plan a refresh — interior, lighting, soft seating — within FY26.",
+      "priority": "medium"
+    },
+    {
+      "title": "Productize the iftar buffet as a year-round positioning angle",
+      "detail": "Ramadan strength can extend into family-event marketing year-round. Lean into the 'family + heritage' brand pillars in social and Google Business Profile copy.",
+      "priority": "medium"
+    },
+    {
+      "title": "Improve shisha section ventilation in Abu Dhabi - Marina",
+      "detail": "Multiple guests mention smoke smell on clothes. A ventilation upgrade pays back via repeat shisha visits.",
+      "priority": "low"
+    }
+  ],
+  "gcc_callouts": [
+    {
+      "theme": "Ramadan",
+      "insight": "Iftar and suhoor mentions appear in 14% of reviews and are 100% positive. This is a major brand asset — guard the operational quality during Ramadan and use the period for content/PR."
+    },
+    {
+      "theme": "Family Section & Prayer Area",
+      "insight": "Both themes get explicit praise from Arabic-speaking reviewers. In KSA expansion (if planned), these become non-negotiable. In UAE they are differentiators, not table-stakes."
+    },
+    {
+      "theme": "Halal",
+      "insight": "Multiple reviewers proactively mention halal certification as a positive — keep visible signage at entrance and on menu."
+    }
+  ]
+}

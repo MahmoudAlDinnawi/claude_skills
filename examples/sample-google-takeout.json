@@ -1,0 +1,44 @@
+[
+  {
+    "header": "Maps",
+    "title": "Rated Bayt Al Khaleej 5 stars",
+    "titleUrl": "https://www.google.com/maps/place/?q=place_id:ChIJExample",
+    "time": "2026-01-15T19:42:11Z",
+    "products": ["Maps"],
+    "details": [
+      {"name": "Best food in JBR! Authentic Khaleeji flavors and the family section is spotless. Halal certified, has a prayer area, and the iftar buffet during Ramadan is unbeatable. Will keep coming back."}
+    ]
+  },
+  {
+    "header": "Maps",
+    "title": "Rated Suhail Kitchen 2 stars",
+    "time": "2026-01-08T13:20:45Z",
+    "products": ["Maps"],
+    "details": [
+      {"name": "Waited 35 minutes for our order, food came cold. Staff was unfriendly when we asked about it. Disappointing for the prices."}
+    ]
+  },
+  {
+    "header": "Maps",
+    "title": "Rated Bayt Al Khaleej 4 stars",
+    "time": "2025-12-28T20:10:00Z",
+    "products": ["Maps"],
+    "details": [
+      {"name": "اكل لذيذ والخدمه راقيه. القسم العائلي مريح بس المواقف صعبه يوم الجمعه."}
+    ]
+  },
+  {
+    "header": "Search",
+    "title": "Searched for bayt al khaleej menu",
+    "time": "2025-12-28T19:00:00Z"
+  },
+  {
+    "header": "Maps",
+    "title": "Rated Café Layla 5 stars",
+    "time": "2025-12-15T18:45:00Z",
+    "products": ["Maps"],
+    "details": [
+      {"name": "Lovely ambiance and great shisha. The rooftop view at sunset is incredible. Highly recommend for date night."}
+    ]
+  }
+]

@@ -1,74 +1,192 @@
-You are a Claude Skills Maker.
+# Restaurant Feedback Analyzer — GCC Edition
 
-Your task is to build a reusable AI Skill called:
-"Restaurant Google Review Intelligence Engine"
+> Turn restaurant customer feedback (Google reviews, Talabat, HungerStation, Zomato, TripAdvisor, Excel exports, JSON) into a polished, decision-ready HTML report — with first-class **Arabic + English** support and **GCC-specific themes** (halal, family section, prayer area, Ramadan iftar, shisha, dress code, delivery).
 
-This Skill analyzes Google Reviews for a restaurant and turns them into clear operational insights.
+Built for restaurant operators, F&B consultants, and CX analysts working in **Saudi Arabia, UAE, Kuwait, Qatar, Bahrain, and Oman**.
 
-INPUT:
-The user will provide raw Google Reviews data, which may include:
-- Review text
-- Star rating (1–5)
-- Date
-- Branch name (if multiple locations)
-- Reviewer name (optional)
+---
 
-The data may be unstructured or copied directly from Google.
+## What you get
 
-YOUR TASK:
+- **NPS, CSAT, CES, sentiment** computed correctly for star-rated reviews
+- **GCC theme tagging** — halal, family/singles section, prayer area, Ramadan, shisha, dress code, delivery, and 10+ more
+- **Multi-format ingestion** — CSV, XLSX, JSON, Google Takeout, multi-file folders
+- **Multi-branch analysis** — auto-aggregates per outlet
+- **Bilingual** — Arabic reviews are detected, kept in original RTL, and analyzed without translation
+- **Single self-contained HTML report** — Chart.js bundled in, opens offline, prints to PDF cleanly
 
-1. Clean and organize the reviews mentally.
+## How it looks
 
-2. Classify each review into:
-   - Positive / Neutral / Negative
-   - Category:
-     * Food Quality
-     * Service
-     * Atmosphere
-     * Waiting Time
-     * Price / Value
-     * Staff Behavior
-     * Cleanliness
-     * Reservation Experience
-     * Other
+The output is a single `report.html` file with:
+- Hero section with restaurant name, country, date range
+- 4 KPI cards (NPS, CSAT, Avg Rating, Effort signal)
+- NPS breakdown bar (promoters / passives / detractors)
+- Rating distribution + monthly trend charts
+- Sentiment + language mix donuts
+- Theme cards with positive/negative split + sample quotes
+- Per-branch comparison table
+- GCC-specific callouts (Ramadan, halal, family, etc.)
+- Strengths, issues with verbatim quotes, prioritized recommendations
 
-3. Detect patterns:
-   - Most common positive points (what guests love)
-   - Most common complaints (repeated issues)
-   - Any critical problems affecting experience
-   - Differences between branches (if provided)
+---
 
-4. Analyze trends:
-   - Are reviews improving or declining over time?
-   - Are low ratings increasing?
+## Install
 
-OUTPUT STRUCTURE:
+```bash
+git clone https://github.com/MahmoudAlDinnawi/claude_skills.git
+cd claude_skills
+pip install -r requirements.txt
+```
 
-SECTION 1: EXECUTIVE SUMMARY
-- Overall rating trend
-- General sentiment (positive / mixed / negative)
-- One clear sentence: “What is really happening?”
+## Usage
 
-SECTION 2: WHAT GUESTS LOVE
-- Top 3–5 repeated positive points
+Run the scripts directly:
 
-SECTION 3: MAIN PROBLEMS
-- Top 3–5 repeated issues
-- Highlight anything critical in operations
+```bash
+# 1. Inspect the file (optional, to confirm columns)
+python3 scripts/analyze.py --inspect path/to/reviews.csv
 
-SECTION 4: OPERATIONAL INSIGHTS
-- What this means for the restaurant (not just data)
-- Example: “Service inconsistency during peak hours is affecting ratings”
+# 2. Run analysis
+python3 scripts/analyze.py \
+  --input path/to/reviews.csv \
+  --output ./out \
+  --restaurant-name "Suhail Kitchen" \
+  --country SA
 
-SECTION 5: ACTION PLAN
-- 3–5 specific actions
-- Must be practical and directly applicable for restaurant operations
+# 3. (Optional) Hand-write narrative.json to populate strengths/issues/recs.
+#    Schema: see SKILL.md.
 
-STYLE:
-- Clear and structured
-- No fluff
-- Think like a Head of Guest Experience
+# 4. Build the HTML
+python3 scripts/build_report.py \
+  --analysis out/analysis.json \
+  --narrative out/narrative.json \
+  --output out/report.html
 
-EXTRA:
-- If reviews are limited, still extract patterns but mention confidence level
-- Prioritize repeated feedback over one-off comments
+# 5. Open it
+open out/report.html        # macOS
+xdg-open out/report.html    # Linux
+```
+
+## Try it on the sample
+
+```bash
+python3 scripts/analyze.py \
+  --input examples/sample-reviews.csv \
+  --output out \
+  --restaurant-name "Bayt Al Khaleej" \
+  --country AE
+
+python3 scripts/build_report.py \
+  --analysis out/analysis.json \
+  --narrative examples/sample-narrative.json \
+  --output out/report.html
+
+open out/report.html
+```
+
+---
+
+## Why a GCC-specific tool?
+
+Because generic CX platforms get GCC restaurant feedback wrong:
+
+| Issue | Generic tools | This skill |
+|---|---|---|
+| Arabic reviews | Translated (badly) or dropped | Analyzed in original Arabic |
+| Khaleeji dialect | Misread (`زفت` ≠ "tar") | Recognized as strong negative |
+| Halal / prayer / family themes | Not in lexicon | First-class themes |
+| Ramadan effects | Treated as outlier | Recognized + called out |
+| Talabat / HungerStation | Ignored | Tagged as delivery cohort |
+| 5★ → NPS conversion | Sometimes wrong | Industry-standard mapping |
+
+GCC F&B NPS typically sits in the 20–40 range. Western dashboards that compare you to the 60+ benchmarks are noise.
+
+---
+
+## Supported input formats
+
+- **Google Business Profile** CSV export (most common for restaurant owners)
+- **Google Takeout** `MyActivity.json`
+- **TripAdvisor** XLSX export
+- **Talabat / HungerStation / Careem / Jahez** CSV/XLSX
+- **Zomato** CSV
+- **Generic** CSV / XLSX / JSON with any rating + text columns
+- **A folder** of any of the above (merged automatically)
+
+See [`references/input-formats.md`](references/input-formats.md) for column auto-detection rules.
+
+## Themes detected
+
+Food quality · Service & Staff · Wait Time · Ambiance · Value · Cleanliness · **Halal** · **Family/Singles Section** · **Prayer Area** · **Ramadan/Iftar/Suhoor** · **Shisha** · **Dress Code** · **Smoking Section** · **Delivery (Talabat/HungerStation)** · Menu Variety · Kids Experience · Parking
+
+Bolded themes are GCC-specific. See [`references/gcc-restaurant-lexicon.md`](references/gcc-restaurant-lexicon.md) for the bilingual cue lists.
+
+## Metrics
+
+- **NPS** (Net Promoter Score) — 5★ → P/P/D mapping or 0–10 scale
+- **CSAT** — top-2-box satisfaction
+- **CES** — friction-keyword proxy (true CES requires a survey)
+- **Sentiment** — rating + bilingual lexicon
+- **Per-theme sentiment split** — one review can be positive on food, negative on wait time
+
+See [`references/metrics-guide.md`](references/metrics-guide.md) for benchmarks and caveats.
+
+---
+
+## Privacy
+
+Everything runs locally. No data leaves your machine. The only network call is the **first-time** Chart.js download (cached in `assets/chart.umd.min.js`); after that, the entire toolchain is offline.
+
+Reviews often contain reviewer names, emails, or phone numbers in free text. Before sharing the report, search `out/normalized.csv` for `@` or digit patterns and redact as needed.
+
+---
+
+## File map
+
+```
+restaurant-feedback-gcc/
+├── SKILL.md                 # Skill instructions
+├── README.md                # This file
+├── LICENSE                  # MIT
+├── requirements.txt
+├── scripts/
+│   ├── analyze.py           # CLI entry: parse → enrich → metrics → JSON
+│   ├── parsers.py           # CSV / XLSX / JSON / Google Takeout
+│   ├── metrics.py           # NPS / CSAT / CES / sentiment / trend / branch
+│   ├── themes.py            # GCC bilingual theme tagger
+│   └── build_report.py      # Renders self-contained report.html
+├── templates/
+│   └── report.html          # HTML template with placeholders
+├── references/
+│   ├── gcc-restaurant-lexicon.md
+│   ├── input-formats.md
+│   └── metrics-guide.md
+├── examples/
+│   ├── sample-reviews.csv
+│   ├── sample-narrative.json
+│   └── sample-google-takeout.json
+└── assets/
+    └── chart.umd.min.js     # Cached on first run
+```
+
+---
+
+## Roadmap
+
+- [ ] Headless PDF export (Playwright)
+- [ ] Per-theme trend over time
+- [ ] Competitor benchmark mode (compare 2+ restaurants)
+- [ ] Aspect-based sentiment via LLM API for higher-quality theme tagging
+- [ ] Native Arabic interface for the report
+
+PRs welcome.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
+
+## Credits
+
+Lexicon curated from public review data across KSA, UAE, Kuwait, Qatar, Bahrain, and Oman.
+
+Author: **Mahmoud Al Dinnawi**
