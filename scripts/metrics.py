@@ -29,6 +29,9 @@ def classify_nps(rating: float, scale: int = 5) -> str | None:
     return "detractor"
 
 
+NPS_MIN_SAMPLE = 30
+
+
 def compute_nps(records: list[dict], scale: int = 5) -> dict:
     counts = {"promoter": 0, "passive": 0, "detractor": 0}
     rated = 0
@@ -38,16 +41,26 @@ def compute_nps(records: list[dict], scale: int = 5) -> dict:
             counts[cat] += 1
             rated += 1
     if rated == 0:
-        return {"nps": None, "rated_count": 0, **counts, "promoter_pct": 0, "passive_pct": 0, "detractor_pct": 0}
+        return {
+            "nps": None, "rated_count": 0, **counts,
+            "promoter_pct": 0, "passive_pct": 0, "detractor_pct": 0,
+            "caveat": "no_ratings",
+        }
     promoter_pct = 100 * counts["promoter"] / rated
     passive_pct = 100 * counts["passive"] / rated
     detractor_pct = 100 * counts["detractor"] / rated
+    raw_nps = round(promoter_pct - detractor_pct, 1)
+    caveat = "sample_too_small" if rated < NPS_MIN_SAMPLE else None
     return {
-        "nps": round(promoter_pct - detractor_pct, 1),
+        # Authoritative NPS: nulled when the sample is too small.
+        "nps": None if caveat == "sample_too_small" else raw_nps,
+        # Indicative value still surfaced for transparency, but flagged.
+        "nps_raw": raw_nps,
         "rated_count": rated,
         "promoter_pct": round(promoter_pct, 1),
         "passive_pct": round(passive_pct, 1),
         "detractor_pct": round(detractor_pct, 1),
+        "caveat": caveat,
         **counts,
     }
 

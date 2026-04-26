@@ -139,6 +139,31 @@ def main() -> int:
         if bucket in rating_dist:
             rating_dist[bucket] += 1
 
+    caveats = []
+    if nps.get("caveat") == "sample_too_small":
+        caveats.append({
+            "key": "small_sample",
+            "severity": "warning",
+            "message": (
+                f"Sample is too small (n={nps['rated_count']}) for a reliable NPS. "
+                f"Industry guidance: at least {30} ratings before treating NPS as a benchmarkable number. "
+                f"Indicative NPS would be {nps.get('nps_raw')}, but treat the rating distribution and themes as your primary signal."
+            ),
+        })
+    if nps.get("caveat") == "no_ratings":
+        caveats.append({
+            "key": "no_ratings",
+            "severity": "error",
+            "message": "No ratings were detected. Re-check the column mapping with --inspect.",
+        })
+    if not branches and any(r.get("branch") for r in records) is False:
+        # No branch column — fine, just inform.
+        caveats.append({
+            "key": "single_location",
+            "severity": "info",
+            "message": "No branch column detected. Reporting aggregate only — no per-location breakdown.",
+        })
+
     analysis = {
         "meta": {
             "restaurant_name": args.restaurant_name,
@@ -152,6 +177,7 @@ def main() -> int:
                 "end": max((r["date"] for r in records if r.get("date")), default=None),
             },
         },
+        "caveats": caveats,
         "summary": {
             **nps,
             **csat,

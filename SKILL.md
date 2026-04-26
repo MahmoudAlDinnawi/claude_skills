@@ -1,8 +1,8 @@
 ---
 name: restaurant-feedback-gcc
-description: Analyze restaurant customer feedback for GCC markets (Saudi Arabia, UAE, Kuwait, Qatar, Bahrain, Oman) from Google Takeout JSON, Excel, CSV, TripAdvisor, Talabat, HungerStation, or Zomato exports. Computes NPS, CSAT, CES, sentiment, and GCC-specific themes (halal, family section, prayer area, Ramadan iftar/suhoor, shisha, dress code), then generates a polished standalone HTML report with Arabic + English support. Use when the user mentions "restaurant feedback," "review analysis," "NPS report," "Google reviews," "Talabat reviews," "Zomato analysis," "customer feedback dashboard," or shares a reviews export file.
+description: Analyze restaurant customer feedback for GCC markets (Saudi Arabia, UAE, Kuwait, Qatar, Bahrain, Oman) from any review export — Google reviews JSON, Google Takeout, Excel, CSV, TripAdvisor, Talabat, HungerStation, or Zomato. No API access required, all file-based. Computes NPS, CSAT, CES, sentiment, and GCC-specific themes (halal, family section, prayer area, Ramadan iftar/suhoor, shisha, dress code), then generates a premium standalone HTML report with Arabic + English support, animated charts, and small-sample-size guardrails. Use when the user mentions "restaurant feedback," "review analysis," "NPS report," "Google reviews," "Talabat reviews," "Zomato analysis," "customer feedback dashboard," or shares a reviews export file.
 metadata:
-  version: 1.0.0
+  version: 1.1.0
   region: GCC
   languages: [en, ar]
 ---
@@ -35,12 +35,18 @@ Ask the user where the file is if they didn't say. Common formats and how to spo
 
 | Format | Signal | Notes |
 |---|---|---|
-| Google Takeout (My Activity) | `MyActivity.json` or HTML, lots of nested `time` + `title` keys | Strip non-review entries first |
-| Google Business Profile export | CSV with `reviewer`, `starRating`, `comment` | Most common for restaurant owners |
+| **Google reviews JSON** | JSON with `reviews:[{reviewer:{displayName}, starRating:"FIVE", comment, createTime}]` | Common shape from Google review exports / scrapers. Word-form ratings + nested reviewer handled automatically. |
+| Google Takeout (My Activity) | `MyActivity.json` with nested `time` + `title` keys | Filters non-review entries automatically. Star rating extracted from title text. |
+| Google reviews CSV export | CSV with `reviewer`, `starRating`, `comment` columns | Standard owner-dashboard download |
 | TripAdvisor scrape/export | XLSX with `Title`, `Review`, `Rating`, `Date` | Often has visit type column |
-| Talabat / HungerStation / Careem | CSV/XLSX with `order_id`, `rating`, `comment`, `branch` | Branch column is gold for multi-location |
+| Talabat / HungerStation / Careem / Jahez | CSV/XLSX with `order_id`, `rating`, `comment`, `branch` | Branch column is gold for multi-location |
 | Zomato | CSV with `rating`, `review_text`, `outlet` | Sometimes split EN/AR rows |
 | Generic | CSV/XLSX/JSON with any rating + text columns | Analyzer auto-detects column names |
+
+The parser also automatically:
+- Maps word-form ratings (`FIVE` → 5, `FOUR` → 4, …) used by Google review exports
+- Splits `(Translated by Google) … (Original) …` comments and **keeps the original Arabic** (per skill rule: don't translate)
+- Flattens nested reviewer objects (`{displayName: ...}`) into a single string
 
 If you're unsure, run `python3 scripts/analyze.py --inspect <file>` first — it prints detected columns and a sample row without running the full pipeline.
 
@@ -153,13 +159,21 @@ If the user asks for a PDF, suggest they print the HTML to PDF from the browser.
 
 ## When the data is thin
 
-If fewer than 30 reviews:
-- Don't compute NPS — say so explicitly. "Sample too small for reliable NPS (n=18). Showing rating distribution instead."
-- Skip trend chart — show the rating distribution instead.
+The script enforces this automatically — `analyze.py` writes a `caveats` array to `analysis.json` and the report renders them as visible warning banners. You don't need to remember the rules; just read `caveats` and reflect them in your narrative.
+
+| Caveat key | Triggered when | What changes |
+|---|---|---|
+| `small_sample` | rated_count < 30 | `summary.nps` becomes `null`, indicative `nps_raw` kept for reference, banner shown in report |
+| `no_ratings` | no parseable ratings at all | NPS + CSAT both null, error banner shown — re-check column mapping |
+| `single_location` | no branch column found | Branches section auto-hides, info banner shown |
+
+When `small_sample` is set:
+- Don't quote the indicative NPS as if it were the real number in your executive summary.
+- Lean on the rating distribution + theme breakdown instead.
 - Be cautious in recommendations. One bad review ≠ a pattern.
 
 If fewer than 100 reviews and multi-branch:
-- Don't break down by branch. Aggregate-only.
+- Don't break down by branch. Aggregate-only. (The script doesn't enforce this — judgment call for the narrator.)
 
 ---
 

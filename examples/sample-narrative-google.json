@@ -1,0 +1,82 @@
+{
+  "executive_summary": "Across 20 reviews captured Feb 14–17 (a Valentine's-weekend slice of single-location data), the restaurant looks healthy on the surface — 75% CSAT, 4.0 average — but the sample is too small to lock in NPS as a benchmark, and the time window is selection-biased toward a positive event. The single most actionable finding is that the only critical 1★ Arabic review went unreplied while five less-important positive reviews got management responses. That detractor-reply gap, not any operational issue, is the clearest pattern in this slice.",
+  "strengths": [
+    {
+      "title": "Iftar / Ramadan positioning is bulletproof",
+      "detail": "Every Ramadan-themed review is positive and rates 5★. Buffet, suhoor, and Ramadan tent are unprompted positives across both Arabic and English reviewers."
+    },
+    {
+      "title": "Family + prayer area is a competitive moat",
+      "detail": "Family section, prayer area, halal, and kids menu all positive. Arabic-speaking reviewers proactively call them out — these are differentiators, not hygiene factors."
+    },
+    {
+      "title": "Bilingual service is landing",
+      "detail": "Arabic-language reviews skew more positive than English. Staff Arabic fluency is showing up as a real asset."
+    }
+  ],
+  "issues": [
+    {
+      "title": "Detractor reviews are getting ignored",
+      "detail": "Most positive reviews got an owner reply. The 1★ Arabic review about oily sauce got nothing. Reply rate to detractors is the highest-leverage fix — it closes the loop and shapes how future customers read the brand.",
+      "quote": "زفت! الزيت في الصلصه واضح. مايستاهل ولا نجمه",
+      "quote_lang": "ar"
+    },
+    {
+      "title": "Delivery experience is the operational weak point",
+      "detail": "Talabat and HungerStation each have at least one severe complaint — late, cold, missing items. Packaging + handoff problem, not a kitchen problem.",
+      "quote": "Worst experience. HungerStation order was 1 hour late and food was cold. Asked for refund, got ignored.",
+      "quote_lang": "en"
+    },
+    {
+      "title": "Friday peak strains service",
+      "detail": "Friday-night and Friday-lunch wait-time complaints appear in both EN and AR reviews. Recurring pattern even in this tiny sample.",
+      "quote": "خدمه ممتازه واكل لذيذ، بس المواقف صعبه يوم الجمعه",
+      "quote_lang": "ar"
+    }
+  ],
+  "recommendations": [
+    {
+      "title": "Reply to every 1–2★ review within 24 hours",
+      "detail": "Start with the 'oily sauce' review today. Set a non-negotiable owner SLA: every detractor gets an Arabic-language reply within 24h. Highest expected lift on future review sentiment.",
+      "priority": "high"
+    },
+    {
+      "title": "Audit Talabat & HungerStation handoff",
+      "detail": "Before driver pickup: temperature check, completeness check, sealed-bag check. Track delivery NPS as a separate KPI for 60 days.",
+      "priority": "high"
+    },
+    {
+      "title": "Add Friday surge staffing",
+      "detail": "Add 1 host + 1 floor staff Thursday-Friday 7–10pm and Friday 12–3pm. Re-measure wait-time mentions in 30 days.",
+      "priority": "medium"
+    },
+    {
+      "title": "Re-run this report on a 90-day window",
+      "detail": "20 reviews across a Valentine's-weekend skew positive. Don't use this slice for any board-level decision. Pull the next 90 days and compare.",
+      "priority": "medium"
+    },
+    {
+      "title": "Lean Ramadan strength into year-round positioning",
+      "detail": "Family + heritage messaging is already working. Use it consistently in social, listings, and menu copy — not just during Ramadan.",
+      "priority": "low"
+    }
+  ],
+  "gcc_callouts": [
+    {
+      "theme": "Ramadan / Iftar / Suhoor",
+      "insight": "All Ramadan-related mentions are 5★. This is a brand asset — protect operational quality during Ramadan and use this period for content/PR. Generic dashboards would treat it as outlier noise; in GCC it's the strongest signal."
+    },
+    {
+      "theme": "Family Section & Prayer Area",
+      "insight": "Both themes get explicit Arabic-language praise (مصلى, القسم العائلي). In any KSA expansion these become non-negotiable. In UAE they're differentiators worth marketing explicitly."
+    },
+    {
+      "theme": "Halal",
+      "insight": "Multiple reviewers proactively mention halal certification. Make sure signage at entrance and on menu makes this visible — it's resolving a real concern for some customers."
+    },
+    {
+      "theme": "Delivery (Talabat / HungerStation)",
+      "insight": "Two of the three lowest-rated reviews are delivery, not dine-in. Track them separately — your dine-in NPS is healthier than the headline number suggests."
+    }
+  ]
+}

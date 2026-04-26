@@ -11,15 +11,43 @@ The analyzer auto-detects most common formats. Run `python3 scripts/analyze.py -
 
 ## Format-specific notes
 
-### Google Business Profile export
+### Google reviews JSON
 
-Most restaurant owners get reviews this way. CSV columns typically:
+This is the JSON shape produced by most Google review export tools — nested reviewer, word-form star ratings, ISO timestamps:
+
+```json
+{
+  "reviews": [
+    {
+      "reviewer": {"displayName": "Ahmed Al-Mansoori"},
+      "starRating": "FIVE",
+      "comment": "Amazing food!",
+      "createTime": "2025-02-14T19:30:00Z"
+    }
+  ]
+}
+```
+
+The parser handles all of this automatically:
+- Word ratings (`"FIVE"` → 5, `"FOUR"` → 4, …)
+- Nested `reviewer.displayName` flattened
+- `createTime` / `updateTime` recognized as date columns
+- `(Translated by Google) ... (Original) ...` comments split — we keep the **original** Arabic per the skill rule
+
+Just run:
+```bash
+python3 scripts/analyze.py --input google-reviews.json --output ./out --restaurant-name "X" --country SA
+```
+
+### Google reviews CSV export
+
+CSV columns typically:
 
 ```
 reviewer, starRating, comment, createTime, location
 ```
 
-Run with no overrides — auto-detection handles all of these.
+Same auto-detection applies. Word ratings and nested fields don't appear in CSV exports — only in JSON.
 
 ### Google Takeout (My Activity)
 

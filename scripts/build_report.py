@@ -7,6 +7,7 @@ output HTML is fully offline-capable.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import html as html_lib
 import json
 import sys
@@ -40,6 +41,29 @@ def esc(s) -> str:
     return html_lib.escape("" if s is None else str(s))
 
 
+# ---------- caveats banner ----------
+
+CAVEAT_ICONS = {"warning": "!", "error": "×", "info": "i"}
+
+
+def render_caveats(items: list) -> str:
+    if not items:
+        return ""
+    parts = []
+    for c in items:
+        sev = c.get("severity", "info")
+        icon = CAVEAT_ICONS.get(sev, "i")
+        parts.append(
+            f'<div class="caveat {esc(sev)}">'
+            f'<span class="icon">{icon}</span>'
+            f'<div>{esc(c.get("message",""))}</div>'
+            f'</div>'
+        )
+    return "\n".join(parts)
+
+
+# ---------- themes ----------
+
 def quote_block(q: dict, sentiment: str) -> str:
     lang_class = "ar" if q.get("lang") == "ar" else ""
     sent_class = "neg" if sentiment == "negative" else ""
@@ -47,8 +71,8 @@ def quote_block(q: dict, sentiment: str) -> str:
     rating_str = f' · {rating}★' if rating else ""
     return (
         f'<blockquote class="{sent_class} {lang_class}">'
-        f'{esc(q["text"])}<small style="display:block;margin-top:4px;color:var(--ink-3);font-style:normal;">'
-        f'{rating_str}</small></blockquote>'
+        f'{esc(q["text"])}<small>{rating_str}</small>'
+        f'</blockquote>'
     )
 
 
@@ -68,20 +92,26 @@ def render_themes(themes: list) -> str:
         for q in t.get("neg_quotes", [])[:2]:
             quotes_html += quote_block(q, "negative")
         parts.append(f'''
-        <div class="theme">
+        <div class="theme reveal" style="--w-pos:{pos_pct:.1f}%; --w-mix:{mix_pct:.1f}%; --w-neg:{neg_pct:.1f}%;">
           <div class="theme-head">
             <span class="theme-title">{esc(t["label"])}</span>
-            <span class="theme-count">{t["total"]} mentions · {t["positive_pct"]}% positive</span>
+            <span class="theme-count">{t["total"]} mentions</span>
           </div>
           <div class="theme-bar">
-            <div class="pos" style="width:{pos_pct:.1f}%;"></div>
-            <div class="mix" style="width:{mix_pct:.1f}%;"></div>
-            <div class="neg" style="width:{neg_pct:.1f}%;"></div>
+            <div class="pos"></div>
+            <div class="mix"></div>
+            <div class="neg"></div>
+          </div>
+          <div class="theme-stats">
+            <span class="pos">{t["positive_pct"]}% positive</span>
+            <span class="neg">{t["negative_pct"]}% negative</span>
           </div>
           <div class="theme-quotes">{quotes_html}</div>
         </div>''')
     return "\n".join(parts)
 
+
+# ---------- branches ----------
 
 def render_branches(branches: list) -> tuple[str, str]:
     if not branches or len(branches) < 2:
@@ -98,15 +128,17 @@ def render_branches(branches: list) -> tuple[str, str]:
     return "\n".join(rows), ""
 
 
+# ---------- strengths / issues / recs ----------
+
 def render_strengths(items: list) -> str:
     if not items:
-        return '<div class="empty">Add a narrative.json to populate this section.</div>'
+        return '<div class="empty">Add a narrative.json to populate this section. See SKILL.md for the schema.</div>'
     parts = []
     for s in items:
         parts.append(
-            f'<div style="padding:14px;border:1px solid var(--border);border-radius:12px;background:#fcfcfd;">'
-            f'<h4 style="margin:0 0 6px;font-size:15px;">{esc(s.get("title",""))}</h4>'
-            f'<p style="margin:0;color:var(--ink-2);font-size:14px;">{esc(s.get("detail",""))}</p>'
+            f'<div class="strength-card">'
+            f'<h4>{esc(s.get("title",""))}</h4>'
+            f'<p>{esc(s.get("detail",""))}</p>'
             f'</div>'
         )
     return "\n".join(parts)
@@ -121,14 +153,12 @@ def render_issues(items: list) -> str:
         lang = i.get("quote_lang", "en")
         quote_html = ""
         if quote:
-            quote_html = (
-                f'<blockquote class="neg {"ar" if lang == "ar" else ""}" style="margin-top:10px;">'
-                f'{esc(quote)}</blockquote>'
-            )
+            ar_class = " ar" if lang == "ar" else ""
+            quote_html = f'<blockquote class="{ar_class.strip()}">{esc(quote)}</blockquote>'
         parts.append(
-            f'<div style="padding:16px;border:1px solid var(--border);border-radius:12px;margin-bottom:10px;background:#fcfcfd;">'
-            f'<h4 style="margin:0 0 6px;font-size:15px;">{esc(i.get("title",""))}</h4>'
-            f'<p style="margin:0;color:var(--ink-2);font-size:14px;">{esc(i.get("detail",""))}</p>'
+            f'<div class="issue-card">'
+            f'<h4>{esc(i.get("title",""))}</h4>'
+            f'<p>{esc(i.get("detail",""))}</p>'
             f'{quote_html}</div>'
         )
     return "\n".join(parts)
@@ -151,21 +181,39 @@ def render_recommendations(items: list) -> str:
     return "\n".join(parts)
 
 
+# ---------- gcc callouts ----------
+
 def render_gcc_callouts(items: list) -> tuple[str, str]:
     if not items:
         return "", "display: none;"
     parts = []
     for c in items:
+        # Pick a single-character glyph based on theme
+        theme = (c.get("theme") or "").lower()
+        if "ramadan" in theme or "iftar" in theme: glyph = "✦"
+        elif "halal" in theme: glyph = "ﷲ"
+        elif "family" in theme: glyph = "♛"
+        elif "prayer" in theme or "musalla" in theme: glyph = "✺"
+        elif "shisha" in theme: glyph = "❋"
+        elif "delivery" in theme: glyph = "→"
+        else: glyph = "◆"
         parts.append(
-            f'<div class="gcc-callout"><strong>{esc(c.get("theme",""))}</strong>'
-            f'<div style="margin-top:4px;color:var(--ink-2);">{esc(c.get("insight",""))}</div></div>'
+            f'<div class="gcc-callout">'
+            f'<div class="gcc-callout-icon">{glyph}</div>'
+            f'<div>'
+            f'<strong>{esc(c.get("theme",""))}</strong>'
+            f'<div class="gcc-detail">{esc(c.get("insight",""))}</div>'
+            f'</div></div>'
         )
     return "\n".join(parts), ""
 
 
-def nps_class(nps_value) -> tuple[str, str]:
+# ---------- nps class ----------
+
+def nps_class(nps_value, has_caveat: bool) -> tuple[str, str]:
     if nps_value is None:
-        return "warn", "warn"
+        # Either no ratings or sample too small — render neutral.
+        return ("unknown", "unknown") if has_caveat else ("warn", "warn")
     if nps_value >= 30: return "good", "good"
     if nps_value >= 0:  return "warn", "warn"
     return "bad", "bad"
@@ -188,9 +236,44 @@ def main() -> int:
 
     meta = analysis["meta"]
     summary = analysis["summary"]
+    caveats = analysis.get("caveats", [])
 
     nps_value = summary.get("nps")
-    nps_kpi_class, nps_text_class = nps_class(nps_value)
+    nps_raw = summary.get("nps_raw")
+    has_small_sample = any(c.get("key") == "small_sample" for c in caveats)
+
+    nps_kpi_class, nps_text_class = nps_class(nps_value, has_caveat=(nps_value is None and len(caveats) > 0))
+
+    # Display strings
+    if nps_value is not None:
+        nps_display = str(nps_value)
+        nps_counter = str(nps_value)
+        nps_raw_note = ""
+    elif has_small_sample and nps_raw is not None:
+        nps_display = "—"
+        nps_counter = "0"  # don't animate to a real number
+        nps_raw_note = f" · indicative {nps_raw}"
+    else:
+        nps_display = "—"
+        nps_counter = "0"
+        nps_raw_note = ""
+
+    nps_sub = (
+        f'{summary.get("rated_count", 0)} ratings'
+        if nps_value is not None else "Sample too small for benchmarking"
+    )
+
+    csat_value = summary.get("csat")
+    csat_display = str(csat_value) if csat_value is not None else "—"
+    csat_counter = str(csat_value) if csat_value is not None else "0"
+
+    avg_rating = summary.get("avg_rating")
+    avg_str = f"{avg_rating:.2f}" if avg_rating is not None else "—"
+    avg_counter = str(avg_rating) if avg_rating is not None else "0"
+
+    ces_value = summary.get("ces_effort_pct")
+    ces_display = str(ces_value) if ces_value is not None else "—"
+    ces_counter = str(ces_value) if ces_value is not None else "0"
 
     date_range = "—"
     dr = meta.get("date_range") or {}
@@ -200,28 +283,30 @@ def main() -> int:
     branches_rows, branches_display = render_branches(analysis.get("branches", []))
     gcc_html, gcc_display = render_gcc_callouts(narrative.get("gcc_callouts", []))
 
-    avg_rating = summary.get("avg_rating")
-    avg_str = f"{avg_rating:.2f}" if avg_rating is not None else "—"
-
-    nps_sub = (
-        f'{summary.get("rated_count", 0)} ratings'
-        if summary.get("nps") is not None else "Not enough data"
-    )
+    report_id = hashlib.sha256(
+        f"{meta.get('restaurant_name')}{meta.get('total_reviews')}{datetime.now().isoformat()}".encode()
+    ).hexdigest()[:12].upper()
 
     replacements = {
         "{{TITLE}}": esc(meta.get("restaurant_name", "Restaurant")),
         "{{COUNTRY}}": esc(meta.get("country") or "GCC"),
         "{{DATE_RANGE}}": esc(date_range),
         "{{TOTAL_REVIEWS}}": str(meta.get("total_reviews", 0)),
-        "{{NPS_VALUE}}": str(nps_value) if nps_value is not None else "—",
+        "{{CAVEATS_HTML}}": render_caveats(caveats),
+        "{{NPS_VALUE}}": nps_display,
+        "{{NPS_COUNTER}}": nps_counter,
         "{{NPS_CLASS}}": nps_kpi_class,
-        "{{NPS_TEXT_CLASS}}": "",  # text size already large; class reserved
+        "{{NPS_TEXT_CLASS}}": nps_text_class,
         "{{NPS_SUB}}": esc(nps_sub),
-        "{{CSAT_VALUE}}": str(summary.get("csat") if summary.get("csat") is not None else "—"),
+        "{{NPS_RAW_NOTE}}": esc(nps_raw_note),
+        "{{CSAT_VALUE}}": csat_display,
+        "{{CSAT_COUNTER}}": csat_counter,
         "{{AVG_RATING}}": avg_str,
+        "{{AVG_COUNTER}}": avg_counter,
         "{{SCALE}}": str(meta.get("rating_scale", 5)),
         "{{RATED_COUNT}}": str(summary.get("rated_count", 0)),
-        "{{CES_VALUE}}": str(summary.get("ces_effort_pct") if summary.get("ces_effort_pct") is not None else "—"),
+        "{{CES_VALUE}}": ces_display,
+        "{{CES_COUNTER}}": ces_counter,
         "{{PROMOTER_PCT}}": str(summary.get("promoter_pct", 0)),
         "{{PASSIVE_PCT}}": str(summary.get("passive_pct", 0)),
         "{{DETRACTOR_PCT}}": str(summary.get("detractor_pct", 0)),
@@ -240,6 +325,7 @@ def main() -> int:
         "{{ISSUES_HTML}}": render_issues(narrative.get("issues", [])),
         "{{RECOMMENDATIONS_HTML}}": render_recommendations(narrative.get("recommendations", [])),
         "{{GENERATED_AT}}": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "{{REPORT_ID}}": report_id,
         "{{CHART_JS}}": chart_js,
         "{{DATA_JSON}}": json.dumps(analysis, ensure_ascii=False),
     }

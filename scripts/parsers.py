@@ -20,9 +20,22 @@ except ImportError:
 
 RATING_KEYS = ["rating", "stars", "star_rating", "starrating", "score", "review_rating", "overall_rating"]
 TEXT_KEYS = ["text", "review", "review_text", "comment", "comments", "feedback", "body", "message", "content"]
-DATE_KEYS = ["date", "review_date", "created_at", "createdat", "timestamp", "time", "submitted_at"]
+DATE_KEYS = ["date", "review_date", "created_at", "createdat", "timestamp", "time", "submitted_at",
+             "create_time", "createtime", "update_time", "updatetime", "publishedat", "published_at"]
 BRANCH_KEYS = ["branch", "outlet", "location", "store", "restaurant", "site", "venue"]
-REVIEWER_KEYS = ["reviewer", "name", "user", "customer", "author"]
+REVIEWER_KEYS = ["reviewer", "name", "user", "customer", "author", "reviewer_name", "displayname"]
+
+# Google review exports use word-form ratings instead of digits.
+_WORD_RATINGS = {
+    "ZERO": 0, "ONE": 1, "TWO": 2, "THREE": 3, "FOUR": 4, "FIVE": 5,
+    "STAR_RATING_UNSPECIFIED": None,
+}
+
+# Google reviews often append a translated copy. We prefer the original.
+_TRANSLATED_RE = re.compile(
+    r"\(Translated by Google\)(?P<translated>.*?)\(Original\)(?P<original>.*)$",
+    re.DOTALL | re.IGNORECASE,
+)
 
 
 def _norm(s: str) -> str:
@@ -43,6 +56,10 @@ def _coerce_rating(value: Any, scale_hint: int = 5) -> float | None:
     if isinstance(value, (int, float)):
         return float(value)
     s = str(value).strip()
+    # Google review exports use word-form ratings: "FIVE", "FOUR", etc.
+    upper = s.upper()
+    if upper in _WORD_RATINGS:
+        return None if _WORD_RATINGS[upper] is None else float(_WORD_RATINGS[upper])
     m = re.search(r"(\d+(?:\.\d+)?)", s)
     if not m:
         return None
@@ -60,16 +77,39 @@ def _coerce_rating(value: Any, scale_hint: int = 5) -> float | None:
     return n
 
 
+def _flatten_reviewer(value: Any) -> str | None:
+    """Google review exports often nest reviewer as {displayName: ..., profilePhotoUrl: ...}."""
+    if value is None or value == "":
+        return None
+    if isinstance(value, dict):
+        return value.get("displayName") or value.get("name") or None
+    return str(value).strip()
+
+
+def _split_translated_comment(text: str) -> str:
+    """If the comment has '(Translated by Google) ... (Original) ...', keep the original.
+    Otherwise return as-is."""
+    if not text:
+        return text
+    m = _TRANSLATED_RE.search(text)
+    if m:
+        return m.group("original").strip()
+    return text
+
+
 def _coerce_date(value: Any) -> str | None:
     if value is None or value == "":
         return None
     if isinstance(value, datetime):
         return value.date().isoformat()
     s = str(value).strip()
-    # Try common formats
+    # Normalize trailing 'Z' (UTC indicator) so plain ISO formats parse it.
+    if s.endswith("Z"):
+        s = s[:-1]
     fmts = [
-        "%Y-%m-%d", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%dT%H:%M:%S.%fZ",
-        "%Y-%m-%d %H:%M:%S", "%d/%m/%Y", "%m/%d/%Y", "%d-%m-%Y",
+        "%Y-%m-%d", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%dT%H:%M:%S.%f",
+        "%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M:%S.%f",
+        "%d/%m/%Y", "%m/%d/%Y", "%d-%m-%Y",
         "%b %d, %Y", "%B %d, %Y", "%d %b %Y", "%d %B %Y",
     ]
     for f in fmts:
@@ -110,7 +150,7 @@ def _row_to_record(row: dict, source: str, overrides: dict | None = None) -> dic
     branch = col("branch_column", BRANCH_KEYS)
     reviewer = col("reviewer_column", REVIEWER_KEYS)
 
-    text = (str(text).strip() if text else "")
+    text = _split_translated_comment(str(text).strip() if text else "")
     rating_val = _coerce_rating(rating, scale_hint=overrides.get("rating_scale", 5))
     date_val = _coerce_date(date)
 
@@ -122,7 +162,7 @@ def _row_to_record(row: dict, source: str, overrides: dict | None = None) -> dic
         "rating": rating_val,
         "date": date_val,
         "branch": (str(branch).strip() if branch else None),
-        "reviewer": (str(reviewer).strip() if reviewer else None),
+        "reviewer": _flatten_reviewer(reviewer),
         "source": source,
     }
 

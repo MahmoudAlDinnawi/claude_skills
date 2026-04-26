@@ -1,0 +1,204 @@
+{
+  "reviews": [
+    {
+      "name": "accounts/1234/locations/5678/reviews/AbFvOq001",
+      "reviewId": "AbFvOq001",
+      "reviewer": {
+        "profilePhotoUrl": "https://example.com/photo1.jpg",
+        "displayName": "Ahmed Al-Mansoori"
+      },
+      "starRating": "FIVE",
+      "comment": "Amazing food and the iftar buffet during Ramadan was incredible! Halal certified, has prayer area, family section is spotless. Will definitely come back.",
+      "createTime": "2025-02-14T19:30:00Z",
+      "updateTime": "2025-02-14T19:30:00Z"
+    },
+    {
+      "name": "accounts/1234/locations/5678/reviews/AbFvOq002",
+      "reviewer": {"displayName": "Fatima Hassan"},
+      "starRating": "FOUR",
+      "comment": "(Translated by Google) Good food but waited 25 minutes for our order. The family section was clean.\n\n(Original) اكل لذيذ بس انتظرنا ٢٥ دقيقه. القسم العائلي نظيف",
+      "createTime": "2025-02-14T20:15:00Z",
+      "updateTime": "2025-02-14T20:15:00Z",
+      "reviewReply": {
+        "comment": "Thank you for your feedback. We are improving our service speed.",
+        "updateTime": "2025-02-15T09:00:00Z"
+      }
+    },
+    {
+      "name": "accounts/1234/locations/5678/reviews/AbFvOq003",
+      "reviewer": {"displayName": "Khalid Al-Otaibi"},
+      "starRating": "ONE",
+      "comment": "زفت! الزيت في الصلصه واضح. مايستاهل ولا نجمه",
+      "createTime": "2025-02-14T21:45:00Z",
+      "updateTime": "2025-02-14T21:45:00Z"
+    },
+    {
+      "name": "accounts/1234/locations/5678/reviews/AbFvOq004",
+      "reviewer": {"displayName": "Sarah Mitchell"},
+      "starRating": "FIVE",
+      "comment": "Best Khaleeji restaurant in Dubai! Lamb mandi was perfectly cooked. Staff is so welcoming and the rooftop view is stunning.",
+      "createTime": "2025-02-15T13:20:00Z",
+      "updateTime": "2025-02-15T13:20:00Z",
+      "reviewReply": {
+        "comment": "Thank you Sarah! We hope to see you again soon.",
+        "updateTime": "2025-02-15T18:00:00Z"
+      }
+    },
+    {
+      "name": "accounts/1234/locations/5678/reviews/AbFvOq005",
+      "reviewer": {"displayName": "Mohammed Al-Sabah"},
+      "starRating": "TWO",
+      "comment": "Cold food when delivered via Talabat. Order was missing the appetizer. Disappointed.",
+      "createTime": "2025-02-15T14:00:00Z",
+      "updateTime": "2025-02-15T14:00:00Z"
+    },
+    {
+      "name": "accounts/1234/locations/5678/reviews/AbFvOq006",
+      "reviewer": {"displayName": "Layla Abdullah"},
+      "starRating": "FIVE",
+      "comment": "خرافي والله! اكل لذيذ وخدمه ممتازه. تستاهل ٥ نجوم. الجلسه حلوه والاجواء راقيه",
+      "createTime": "2025-02-15T19:00:00Z",
+      "updateTime": "2025-02-15T19:00:00Z",
+      "reviewReply": {
+        "comment": "شكراً لكِ على الكلمات الجميلة!",
+        "updateTime": "2025-02-15T22:30:00Z"
+      }
+    },
+    {
+      "name": "accounts/1234/locations/5678/reviews/AbFvOq007",
+      "reviewer": {"displayName": "Omar Khoury"},
+      "starRating": "FOUR",
+      "createTime": "2025-02-15T20:30:00Z",
+      "updateTime": "2025-02-15T20:30:00Z"
+    },
+    {
+      "name": "accounts/1234/locations/5678/reviews/AbFvOq008",
+      "reviewer": {"displayName": "Reem Al-Ahmadi"},
+      "starRating": "FIVE",
+      "comment": "Loved the iftar! Variety was incredible and they had a beautiful Ramadan tent. Highly recommend for families.",
+      "createTime": "2025-02-15T21:00:00Z",
+      "updateTime": "2025-02-15T21:00:00Z",
+      "reviewReply": {
+        "comment": "Thank you Reem!",
+        "updateTime": "2025-02-16T10:00:00Z"
+      }
+    },
+    {
+      "name": "accounts/1234/locations/5678/reviews/AbFvOq009",
+      "reviewer": {"displayName": "Tariq Bin Salman"},
+      "starRating": "THREE",
+      "comment": "Food was okay but the prices are high. Service was slow on Friday night.",
+      "createTime": "2025-02-15T22:15:00Z",
+      "updateTime": "2025-02-15T22:15:00Z"
+    },
+    {
+      "name": "accounts/1234/locations/5678/reviews/AbFvOq010",
+      "reviewer": {"displayName": "Nadia Al-Suwaidi"},
+      "starRating": "FIVE",
+      "comment": "Beautiful ambiance and the shisha was great! Family section is well-separated. Halal certified.",
+      "createTime": "2025-02-16T18:00:00Z",
+      "updateTime": "2025-02-16T18:00:00Z",
+      "reviewReply": {
+        "comment": "Thank you for your kind review!",
+        "updateTime": "2025-02-16T20:00:00Z"
+      }
+    },
+    {
+      "name": "accounts/1234/locations/5678/reviews/AbFvOq011",
+      "reviewer": {"displayName": "Hassan Al-Mahmoud"},
+      "starRating": "FIVE",
+      "comment": "اجواء راقيه وطعام لذيذ. ممتاز للعوائل وفيه مصلى نظيف",
+      "createTime": "2025-02-16T19:30:00Z",
+      "updateTime": "2025-02-16T19:30:00Z"
+    },
+    {
+      "name": "accounts/1234/locations/5678/reviews/AbFvOq012",
+      "reviewer": {"displayName": "Aisha Bin Hammad"},
+      "starRating": "TWO",
+      "comment": "Found a hair in my food and the manager didn't apologize properly. Very disappointing.",
+      "createTime": "2025-02-16T20:45:00Z",
+      "updateTime": "2025-02-16T20:45:00Z"
+    },
+    {
+      "name": "accounts/1234/locations/5678/reviews/AbFvOq013",
+      "reviewer": {"displayName": "Yusuf Al-Khalifa"},
+      "starRating": "FIVE",
+      "comment": "Best suhoor experience! Traditional menu and great atmosphere during Ramadan nights.",
+      "createTime": "2025-02-16T03:00:00Z",
+      "updateTime": "2025-02-16T03:00:00Z",
+      "reviewReply": {
+        "comment": "Thank you! Ramadan Mubarak.",
+        "updateTime": "2025-02-16T11:00:00Z"
+      }
+    },
+    {
+      "name": "accounts/1234/locations/5678/reviews/AbFvOq014",
+      "reviewer": {"displayName": "Mariam Al-Zahra"},
+      "starRating": "FOUR",
+      "comment": "خدمه ممتازه واكل لذيذ، بس المواقف صعبه يوم الجمعه",
+      "createTime": "2025-02-16T21:00:00Z",
+      "updateTime": "2025-02-16T21:00:00Z"
+    },
+    {
+      "name": "accounts/1234/locations/5678/reviews/AbFvOq015",
+      "reviewer": {"displayName": "Bilal Rashid"},
+      "starRating": "FIVE",
+      "comment": "Great kids menu and play area. Brought the family for Friday lunch and everyone loved it.",
+      "createTime": "2025-02-16T13:30:00Z",
+      "updateTime": "2025-02-16T13:30:00Z",
+      "reviewReply": {
+        "comment": "Thank you Bilal!",
+        "updateTime": "2025-02-16T16:00:00Z"
+      }
+    },
+    {
+      "name": "accounts/1234/locations/5678/reviews/AbFvOq016",
+      "reviewer": {"displayName": "Hind Al-Maktoum"},
+      "starRating": "FIVE",
+      "comment": "ممتاز! القسم العائلي نظيف ومريح، والمصلى موجود. تجربه راقيه",
+      "createTime": "2025-02-16T22:00:00Z",
+      "updateTime": "2025-02-16T22:00:00Z",
+      "reviewReply": {
+        "comment": "شكراً جزيلاً!",
+        "updateTime": "2025-02-17T09:00:00Z"
+      }
+    },
+    {
+      "name": "accounts/1234/locations/5678/reviews/AbFvOq017",
+      "reviewer": {"displayName": "Saeed Al-Nahyan"},
+      "starRating": "ONE",
+      "comment": "Worst experience. HungerStation order was 1 hour late and food was cold. Asked for refund, got ignored.",
+      "createTime": "2025-02-16T23:30:00Z",
+      "updateTime": "2025-02-16T23:30:00Z"
+    },
+    {
+      "name": "accounts/1234/locations/5678/reviews/AbFvOq018",
+      "reviewer": {"displayName": "Dana Al-Mubarak"},
+      "starRating": "FIVE",
+      "createTime": "2025-02-17T19:00:00Z",
+      "updateTime": "2025-02-17T19:00:00Z"
+    },
+    {
+      "name": "accounts/1234/locations/5678/reviews/AbFvOq019",
+      "reviewer": {"displayName": "Zainab Hussein"},
+      "starRating": "FOUR",
+      "comment": "Good food and friendly staff. Bathroom could be cleaner though.",
+      "createTime": "2025-02-17T20:30:00Z",
+      "updateTime": "2025-02-17T20:30:00Z"
+    },
+    {
+      "name": "accounts/1234/locations/5678/reviews/AbFvOq020",
+      "reviewer": {"displayName": "Ibrahim Al-Sabah"},
+      "starRating": "FIVE",
+      "comment": "Perfect spot! Halal, family-friendly, prayer area, great shisha. Five stars all around.",
+      "createTime": "2025-02-17T22:00:00Z",
+      "updateTime": "2025-02-17T22:00:00Z",
+      "reviewReply": {
+        "comment": "Thank you Ibrahim!",
+        "updateTime": "2025-02-18T10:00:00Z"
+      }
+    }
+  ],
+  "averageRating": 4.05,
+  "totalReviewCount": 20
+}

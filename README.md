@@ -9,11 +9,12 @@ Built for restaurant operators, F&B consultants, and CX analysts working in **Sa
 ## What you get
 
 - **NPS, CSAT, CES, sentiment** computed correctly for star-rated reviews
+- **Built-in guardrails** — small-sample warning (<30 ratings = NPS suppressed), missing-rating detection, single-location auto-handling
 - **GCC theme tagging** — halal, family/singles section, prayer area, Ramadan, shisha, dress code, delivery, and 10+ more
-- **Multi-format ingestion** — CSV, XLSX, JSON, Google Takeout, multi-file folders
-- **Multi-branch analysis** — auto-aggregates per outlet
-- **Bilingual** — Arabic reviews are detected, kept in original RTL, and analyzed without translation
-- **Single self-contained HTML report** — Chart.js bundled in, opens offline, prints to PDF cleanly
+- **Multi-format ingestion** — CSV, XLSX, JSON (incl. Google reviews shape with `"FIVE"`/`"FOUR"` ratings), Google Takeout, multi-file folders
+- **Multi-branch analysis** — auto-aggregates per outlet when a branch column is detected
+- **Bilingual** — Arabic reviews detected, kept in original RTL, analyzed without translation. `(Translated by Google)` boilerplate is stripped, original Arabic kept
+- **Premium standalone HTML report** — animated charts, count-up KPIs, scroll-revealed sections, hover micro-interactions. Chart.js bundled, opens offline, prints to PDF cleanly
 
 ## How it looks
 
@@ -67,8 +68,9 @@ open out/report.html        # macOS
 xdg-open out/report.html    # Linux
 ```
 
-## Try it on the sample
+## Try it on the samples
 
+**CSV demo (36 multi-branch reviews, 3 months):**
 ```bash
 python3 scripts/analyze.py \
   --input examples/sample-reviews.csv \
@@ -79,6 +81,22 @@ python3 scripts/analyze.py \
 python3 scripts/build_report.py \
   --analysis out/analysis.json \
   --narrative examples/sample-narrative.json \
+  --output out/report.html
+
+open out/report.html
+```
+
+**Google reviews JSON demo (20 reviews, mixed Arabic + English, small-sample warning shown):**
+```bash
+python3 scripts/analyze.py \
+  --input examples/sample-google-reviews.json \
+  --output out \
+  --restaurant-name "Bayt Al Khaleej" \
+  --country AE
+
+python3 scripts/build_report.py \
+  --analysis out/analysis.json \
+  --narrative examples/sample-narrative-google.json \
   --output out/report.html
 
 open out/report.html
@@ -105,7 +123,10 @@ GCC F&B NPS typically sits in the 20–40 range. Western dashboards that compare
 
 ## Supported input formats
 
-- **Google Business Profile** CSV export (most common for restaurant owners)
+No API access needed — everything is file-based.
+
+- **Google reviews JSON** (the format used by most review-export tools — handles word-form ratings like `"FIVE"`, nested reviewer objects, and `(Translated by Google)` boilerplate)
+- **Google reviews CSV** export
 - **Google Takeout** `MyActivity.json`
 - **TripAdvisor** XLSX export
 - **Talabat / HungerStation / Careem / Jahez** CSV/XLSX
@@ -164,6 +185,8 @@ restaurant-feedback-gcc/
 ├── examples/
 │   ├── sample-reviews.csv
 │   ├── sample-narrative.json
+│   ├── sample-google-reviews.json
+│   ├── sample-narrative-google.json
 │   └── sample-google-takeout.json
 └── assets/
     └── chart.umd.min.js     # Cached on first run
